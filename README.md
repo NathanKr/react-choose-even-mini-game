@@ -24,6 +24,14 @@ React game using class component (no routing , no ajax). Mostly get a feeling of
 </ul>
 
 <h2>Design</h2>
+<ul>
   <li>state</li>
   <li>props</li>
-  <li>components</li
+  <li>components</li>
+</ul>
+
+
+<h2>Open issues</h2>
+<ul>
+  <li>the seconds written to the local storage are smaller by one from the seconds that appears on the dom</li>
+</ul>
