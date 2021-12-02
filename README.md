@@ -21,6 +21,7 @@ React game using class component (no routing , no ajax). Mostly get a feeling of
   <li> start button</li>
   <li> display elapsed seconds and 'Game Over' in Message component</li>
   <li> display each number in Item component</li>
+  <li> re-shuffel if all numbers are odd<li> 
 </ul>
 
 <h2>Design</h2>

@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import Message from "./Message";
-import Item from "./Item"
+import Item from "./Item";
 
 class ChooseEvenGame extends Component {
   LOCAL_STORAGE_KEY = "choose_even_history_key";
@@ -17,8 +17,8 @@ class ChooseEvenGame extends Component {
   };
 
   getHistory = () => {
-    const jsonHistory = localStorage.getItem(this.LOCAL_STORAGE_KEY);
-    return JSON.parse(jsonHistory);
+    let jsonHistory = localStorage.getItem(this.LOCAL_STORAGE_KEY);
+    return jsonHistory ? JSON.parse(jsonHistory) : [];
   };
 
   appendToHistory = (secondsElapsed) => {
@@ -32,17 +32,16 @@ class ChooseEvenGame extends Component {
     this.timerHandle = null;
   };
 
+  isAllOdd = () => {
+    const foundEven = this.state.items.find((it) => this.isEven(it.number));
+    return !foundEven;
+  };
+
   startGame = () => {
+    do {
+      this.shuffle();
+    } while (!this.isAllOdd());
     this.startCounter();
-    const items = [];
-    for (let index = 0; index < this.NUM_ITEMS; index++) {
-      const item = {
-        number: 1 + Math.floor(Math.random() * 20),
-        clicked: false,
-      };
-      items.push(item);
-    }
-    this.setState({ items });
   };
 
   isEven = (number) => number % 2 == 0;
@@ -64,17 +63,29 @@ class ChooseEvenGame extends Component {
     this.appendToHistory(this.state.gameSeconds);
   };
 
+  shuffle() {
+    const items = [];
+    for (let index = 0; index < this.NUM_ITEMS; index++) {
+      const item = {
+        number: 1 + Math.floor(Math.random() * 20),
+        clicked: false,
+      };
+      items.push(item);
+    }
+    this.setState({ items });
+  }
+
   render() {
     const { items, gameOver, gameSeconds } = this.state;
     const elements = items.map((item, index) => (
       <Item
-        clicked = {item.clicked}
+        clicked={item.clicked}
         key={index}
         number={item.number}
         clickHandler={() => {
           item.clicked = true;
           this.setState({ items, gameOver: this.isGameOver() });
-          if (!this.isEven()) {
+          if (!this.isEven(item.number)) {
             // --- punish
             this.setState({ gameSeconds: gameSeconds + 1 });
           }
