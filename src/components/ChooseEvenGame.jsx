@@ -83,8 +83,10 @@ class ChooseEvenGame extends Component {
         key={index}
         number={item.number}
         clickHandler={() => {
-          item.clicked = true;
-          this.setState({ items, gameOver: this.isGameOver() });
+          const newItems = [...items]
+          //item.clicked = true;
+          newItems[index].clicked = true;
+          this.setState({ items : newItems, gameOver: this.isGameOver() });
           if (!this.isEven(item.number)) {
             // --- punish
             this.setState({ gameSeconds: gameSeconds + 1 });
