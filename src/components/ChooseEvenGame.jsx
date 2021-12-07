@@ -32,15 +32,16 @@ class ChooseEvenGame extends Component {
     this.timerHandle = null;
   };
 
-  isAllOdd = () => {
-    const foundEven = this.state.items.find((it) => this.isEven(it.number));
+  isAllOdd = items => {
+    const foundEven = items.find((it) => this.isEven(it.number));
     return !foundEven;
   };
 
   startGame = () => {
+    let items;
     do {
-      this.shuffle();
-    } while (!this.isAllOdd());
+      items = this.shuffle();
+    } while (this.isAllOdd(items)); //7/12/2021 : fixed from !
     this.startCounter();
   };
 
@@ -73,18 +74,21 @@ class ChooseEvenGame extends Component {
       items.push(item);
     }
     this.setState({ items });
+    return items;
   }
 
   render() {
     const { items, gameOver, gameSeconds } = this.state;
     const elements = items.map((item, index) => (
+      <Fragment key={index}>
       <Item
         clicked={item.clicked}
-        key={index}
+        
         number={item.number}
         clickHandler={() => {
+          // --- item.clicked = true; --> 7/12/2021 : do not muatate state directly, 
+          // --- fixed below by using newItems
           const newItems = [...items]
-          //item.clicked = true;
           newItems[index].clicked = true;
           this.setState({ items : newItems, gameOver: this.isGameOver() });
           if (!this.isEven(item.number)) {
@@ -96,6 +100,8 @@ class ChooseEvenGame extends Component {
           }
         }}
       />
+      {(index + 1)% (this.NUM_ITEMS / this.ROWS) == 0 ? <br /> : ''}
+      </Fragment>
     ));
 
     const history = (
